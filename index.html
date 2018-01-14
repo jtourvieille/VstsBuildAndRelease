@@ -1,0 +1,46 @@
+<html style="min-width:600px;">
+  <head>
+    <title>VSTS Build and Release</title>
+	<script src="scripts/index.js"></script>
+	<script src="scripts/utils.js"></script>
+	<script src="scripts/projects.js"></script>
+	<script src="scripts/builds.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css"></link>
+	<link rel="stylesheet" type="text/css" href="icono.min.css"></link>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dosis|Indie%20Flower"></link>
+  </head>
+
+  <body>
+    <div> 
+        <div><h3>Domain VSTS</h3></div>
+        <span>http(s)://</span><input type="text" id="vstsName" placeholder="my domain..." style='margin:2px'/><span>.visualstudio.com</span>
+    </div>
+    <div>
+        <input type="text" id="mail" placeholder="Mail address..." style='margin:2px' />
+        <input type="password" id="accessKey" placeholder="Password/Alternate credentials..." style='margin:2px' />
+    </div>
+	<button id="login" style='margin:4px; width:120px'>
+	<span style='font-family:Dosis'>Explore</span>
+	</button>
+	<div id="ProjectError" style="display: none;"></div>
+	<div class="tab">
+	  <button class="tablinks" id="buildTab">Build</button>
+	  <button class="tablinks" id="releaseTab">Release</button>
+	</div>
+	<div id="Build" class="tabcontent">
+	  <div id="ProjectTitle" style="display: none;">
+		<h1>Projects</h1>
+		<div style='float: right; margin-top: -50px'><a id='refresh' href='#'><img src='img/icon/refresh.png' /></a></div>
+	  </div>
+	  
+	  <ul id="Projects" style='display: none;'>
+	  </ul>
+	</div>
+	<div id="Release" class="tabcontent">
+	  <div>Release not yet available</div>
+	</div>
+	
+	
+  </body>
+
+</html>
