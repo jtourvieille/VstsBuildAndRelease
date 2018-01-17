@@ -10,7 +10,10 @@ var getProjects = function(response) {
 			projectList.removeChild(projectList.firstChild);
 		}
 		
-		parsedResponse.value.forEach(function(project) {
+		parsedResponse.value.sort(
+		function(a,b){
+			return a.name > b.name;
+			}).forEach(function(project) {
 			
 			var projectError = document.getElementById('ProjectError');
 			projectError.style = 'display: none;';

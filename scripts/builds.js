@@ -2,7 +2,9 @@ var getBuildDefinitions = function(buildResponse){
 	
 	var parsedBuildResponse = JSON.parse(buildResponse);
 
-	parsedBuildResponse.value.forEach(function(oneBuild){
+	parsedBuildResponse.value.sort(function(a, b){
+		return a.name > b.name;
+	}).forEach(function(oneBuild){
 		
 	  if (oneBuild.type === 'build')
 	  {
@@ -12,11 +14,11 @@ var getBuildDefinitions = function(buildResponse){
 		  
 		  
 		  
-		  queueBuild.id = oneBuild.id;
-		  buildLabel.for = oneBuild.id;
+		  queueBuild.id = oneBuild.project.id + '_' + oneBuild.id;
+		  
 		  buildLabel.innerHTML = '  ' + oneBuild.name + ' ';
 		  
-		  buildDiv.id = oneBuild.id;
+		  buildDiv.id = oneBuild.project.id + '_' + oneBuild.id;
 		  buildDiv.style = 'margin:2px';
 		  buildDiv.appendChild(queueBuild);
 		  buildDiv.appendChild(buildLabel);
@@ -27,12 +29,19 @@ var getBuildDefinitions = function(buildResponse){
 		  
 		  getBuildStatus(oneBuild);
 		  
-		  queueBuild.addEventListener('click', function() {
+		  queueBuild.addEventListener('click', function(e) {
+			  
+			  var buttonId = e.currentTarget.id;
+			  var buttonIdSplitted = buttonId.split('_');
+			  var projectId = buttonIdSplitted[0];
+			  var buildId = buttonIdSplitted[1];
+			  
+			  
 	  
 			  var vstsName = document.getElementById('vstsName');
 			  
-			  var url = 'https://' + vstsName.value + '.visualstudio.com/defaultCollection/' + oneBuild.project.id + '/_apis/build/builds?api-version=2.0';
-			  var body = {"definition": { "id": oneBuild.id }};
+			  var url = 'https://' + vstsName.value + '.visualstudio.com/defaultCollection/' + projectId + '/_apis/build/builds?api-version=2.0';
+			  var body = {"definition": { "id": buildId }};
 			  
 			  var client = new HttpClient();
 			  client.post(url, getBasicAuthHeader(), JSON.stringify(body), function(result) {}, function(status, statusText) {});
@@ -103,7 +112,7 @@ var getBuildInstances = function(oneBuildInstance){
 				  buildInstanceDiv.appendChild(a);
 				  
 				  
-				  var buildDiv = document.getElementById(oneBuildInstance.definition.id);
+				  var buildDiv = document.getElementById(oneBuildInstance.project.id + '_' + oneBuildInstance.definition.id);
 				  buildDiv.appendChild(buildInstanceDiv);
 			  };
 			  
@@ -113,7 +122,7 @@ var getBuildInstances = function(oneBuildInstance){
 	  var url = 'https://' + vstsName.value + '.visualstudio.com/defaultCollection/' + oneBuild.project.id + '/_apis/build/builds?api-version=2.0';
 	  client.get(url, getBasicAuthHeader(), function(result) {
 		  var parsedBuildResponse = JSON.parse(result);
-		  var buildDiv = document.getElementById(parsedBuildResponse.value[0].definition.id);
+		  var buildDiv = document.getElementById(parsedBuildResponse.value[0].definition.project.id + '_' + parsedBuildResponse.value[0].definition.id);
 		  // Clear previous children
 			while (buildDiv.lastChild.tagName !== 'LABEL') {
 				buildDiv.removeChild(buildDiv.lastChild);

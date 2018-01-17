@@ -11,11 +11,17 @@ document.addEventListener('DOMContentLoaded', function() {
   buildTab.addEventListener('click', function(evt) { openTab(evt, 'Build'); });
   releaseTab.addEventListener('click', function(evt) { openTab(evt, 'Release'); });
   
-  if (localStorage !== null && localStorage['mail'] !== null && localStorage['accessKey'] !== null && localStorage['vstsName'] !== null)
+  if (localStorage !== null && localStorage['mail'] !== undefined && localStorage['accessKey'] !== undefined && localStorage['vstsName'] !== undefined)
   {
 	  document.getElementById('vstsName').value = localStorage['vstsName'];
 	  document.getElementById('mail').value = localStorage['mail'];
 	  document.getElementById('accessKey').value = localStorage['accessKey'];
+  }
+  else
+  {
+	  document.getElementById('vstsName').value = '';
+	  document.getElementById('mail').value = '';
+	  document.getElementById('accessKey').value = '';
   }
 
 }, false);
