@@ -4,30 +4,32 @@ var getBuildDefinitions = function(buildResponse){
 
 	parsedBuildResponse.value.sort(function(a, b){
 		return a.name > b.name;
-	}).forEach(function(oneBuild){
+	}).forEach(function(oneBuildDefinition){
 		
-	  if (oneBuild.type === 'build')
+	  if (oneBuildDefinition.type === 'build')
 	  {
 	   	  var buildDiv = document.createElement("div");
 		  var queueBuild = document.createElement("button");
 		  var buildLabel = document.createElement("label");
+		  var loadingImg = document.createElement("img");
 		  
+		  queueBuild.id = oneBuildDefinition.project.id + '_' + oneBuildDefinition.id;
 		  
+		  buildLabel.innerHTML = '  ' + oneBuildDefinition.name + ' ';
 		  
-		  queueBuild.id = oneBuild.project.id + '_' + oneBuild.id;
+		  loadingImg.src = 'img/ajax-loader.gif';
 		  
-		  buildLabel.innerHTML = '  ' + oneBuild.name + ' ';
-		  
-		  buildDiv.id = oneBuild.project.id + '_' + oneBuild.id;
+		  buildDiv.id = oneBuildDefinition.project.id + '_' + oneBuildDefinition.id;
 		  buildDiv.style = 'margin:2px';
 		  buildDiv.appendChild(queueBuild);
 		  buildDiv.appendChild(buildLabel);
+		  buildDiv.appendChild(loadingImg);
 		  
 		  queueBuild.type = "button";
 		  
 		  queueBuild.innerHTML = 'launch';
 		  
-		  getBuildStatus(oneBuild);
+		  getBuildStatus(oneBuildDefinition);
 		  
 		  queueBuild.addEventListener('click', function(e) {
 			  
@@ -36,8 +38,6 @@ var getBuildDefinitions = function(buildResponse){
 			  var projectId = buttonIdSplitted[0];
 			  var buildId = buttonIdSplitted[1];
 			  
-			  
-	  
 			  var vstsName = document.getElementById('vstsName');
 			  
 			  var url = 'https://' + vstsName.value + '.visualstudio.com/defaultCollection/' + projectId + '/_apis/build/builds?api-version=2.0';
@@ -47,16 +47,15 @@ var getBuildDefinitions = function(buildResponse){
 			  client.post(url, getBasicAuthHeader(), JSON.stringify(body), function(result) {}, function(status, statusText) {});
 			  
 			  setTimeout(function () {
-					getBuildStatus(oneBuild);
+					getBuildStatus(oneBuildDefinition);
 				}, 1000);
 			  
 		  }, false);
 		  
-		  var projectLi = document.getElementById(oneBuild.project.id);
+		  var projectLi = document.getElementById(oneBuildDefinition.project.id);
 		  
 		  projectLi.appendChild(buildDiv);
 	  }
-	  
 	});
 };
 
@@ -116,17 +115,32 @@ var getBuildInstances = function(oneBuildInstance){
 				  buildDiv.appendChild(buildInstanceDiv);
 			  };
 			  
-  var getBuildStatus = function(oneBuild)
+  var getBuildStatus = function(oneBuildDefinition)
   {
 	  var client = new HttpClient();
-	  var url = 'https://' + vstsName.value + '.visualstudio.com/defaultCollection/' + oneBuild.project.id + '/_apis/build/builds?api-version=2.0';
+	  var url = 'https://' + vstsName.value + '.visualstudio.com/defaultCollection/' + oneBuildDefinition.project.id + '/_apis/build/builds?api-version=2.0';
 	  client.get(url, getBasicAuthHeader(), function(result) {
 		  var parsedBuildResponse = JSON.parse(result);
-		  var buildDiv = document.getElementById(parsedBuildResponse.value[0].definition.project.id + '_' + parsedBuildResponse.value[0].definition.id);
-		  // Clear previous children
-			while (buildDiv.lastChild.tagName !== 'LABEL') {
+		  
+		  parsedBuildResponse = parsedBuildResponse.value.filter(function(b){
+			return b.definition.id === oneBuildDefinition.id;
+		  });
+		  
+		  if (parsedBuildResponse.length > 0)
+		  {
+			  var buildDiv = document.getElementById(parsedBuildResponse[0].definition.project.id + '_' + parsedBuildResponse[0].definition.id);
+			  // Clear previous children
+			  while (buildDiv.lastChild.tagName !== 'LABEL') {
 				buildDiv.removeChild(buildDiv.lastChild);
-			}
-		  parsedBuildResponse.value.slice(0,5).forEach(getBuildInstances);
+			  }
+			  parsedBuildResponse.slice(0,5).forEach(getBuildInstances);
+		  }
+		  else
+		  {
+			  var buildDiv = document.getElementById(oneBuildDefinition.project.id + '_' + oneBuildDefinition.id);
+			  
+			  // last child should be the loading image
+			  buildDiv.removeChild(buildDiv.lastChild);
+		  }
 	  }, function(status, statusText) {});
   };
