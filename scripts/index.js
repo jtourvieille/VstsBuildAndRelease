@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	loginButton.addEventListener('click', loadProjects, false);
 	var refresh = document.getElementById('refresh');
 	refresh.addEventListener('click', loadProjects, false);
+	
+	var refreshRelease = document.getElementById('refreshRelease');
+	refreshRelease.addEventListener('click', loadProjects, false);
 
   var buildTab = document.getElementById('buildTab');
   var releaseTab = document.getElementById('releaseTab');

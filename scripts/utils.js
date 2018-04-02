@@ -77,6 +77,8 @@ function openTab(evt, tabName) {
     // Show the current tab, and add an "active" class to the button that opened the tab
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
+	
+	sessionStorage['currentTab'] = tabName;
 };
 
 var loadProjects = function() {
@@ -89,7 +91,10 @@ var loadProjects = function() {
 	var client = new HttpClient();
 	client.get(url, getBasicAuthHeader(), getProjects, getProjectsError);
 	
-	var evObj = document.createEvent('Events');
-    evObj.initEvent('click', true, false);
-    document.getElementById('buildTab').dispatchEvent(evObj);
+	if (sessionStorage['currentTab'] === undefined)
+	{
+		var evObj = document.createEvent('Events');
+		evObj.initEvent('click', true, false);
+		document.getElementById('buildTab').dispatchEvent(evObj);
+	}
   };

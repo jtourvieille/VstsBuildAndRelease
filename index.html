@@ -5,6 +5,7 @@
 	<script src="scripts/utils.js"></script>
 	<script src="scripts/projects.js"></script>
 	<script src="scripts/builds.js"></script>
+	<script src="scripts/release.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css"></link>
 	<link rel="stylesheet" type="text/css" href="icono.min.css"></link>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dosis|Indie%20Flower"></link>
@@ -37,7 +38,12 @@
 	  </ul>
 	</div>
 	<div id="Release" class="tabcontent">
-	  <div>Release not yet available</div>
+	  <div id="ProjectReleaseTitle" style="display: none;">
+		<h1>Projects</h1>
+		<div style='float: right; margin-top: -50px'><a id='refreshRelease' href='#'><img src='img/icon/refresh.png' /></a></div>
+	  </div>
+	  
+	  <ul id="ProjectsRelease" style='display: none;'>
 	</div>
 	
 	
