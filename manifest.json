@@ -1,7 +1,7 @@
 {
 "name" :"VSTS Build and Release",
 "manifest_version": 2,
-"version" :"1.1",
+"version" :"1.2",
 "icons": {
     "16": "img/icon/vsts_16px.png",
     "32": "img/icon/vsts_32px.png",
